@@ -1,0 +1,33 @@
+# --- OS spezifische Dateien ---
+.DS_Store
+Thumbs.db
+*.swp
+
+# --- IDE spezifische Dateien ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.zed/
+
+# --- BACKEND (Rust/Cargo) ---
+backend/target/
+# Wir ignorieren die .env Datei, weil darin dein DB-Passwort steht!
+backend/.env
+# Falls du sqlx-data.json für Offline-Kompilierung nutzt:
+# backend/sqlx-data.json
+
+# --- FRONTEND (Node/Angular) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.cache/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.env
+frontend/.env.local
+
+# --- SONSTIGES ---
+*.zip
+*.log

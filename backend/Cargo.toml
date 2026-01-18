@@ -1,0 +1,34 @@
+[package]
+name = "backend"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# Web Framework & Async
+axum = "0.8.8"
+tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros", "net"] }
+tower-http = { version = "0.6.8", features = ["cors"] }
+argon2 = "0.5"
+jsonwebtoken = "9.3"
+rand_core = { version = "0.6", features = ["getrandom"] }
+
+# Datenbank & SQL (sqlx)
+# Wir nutzen rustls für TLS, damit keine OpenSSL-Systemabhängigkeiten nötig sind
+sqlx = { version = "0.8.3", features = [
+    "runtime-tokio",
+    "tls-rustls",
+    "postgres",
+    "macros",
+    "uuid",
+    "chrono"
+] }
+
+# Serialisierung & Datentypen
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.149"
+uuid = { version = "1.11", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# Utilities
+dotenvy = "0.15.7"
+async-trait = "0.1.89"
