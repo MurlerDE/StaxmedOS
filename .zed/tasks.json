@@ -1,0 +1,7 @@
+[
+  {
+    "label": "Export Types",
+    "command": "cargo test -p shared_types",
+    "description": "Generiert TypeScript Interfaces aus Rust Structs"
+  }
+]
