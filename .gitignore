@@ -32,3 +32,4 @@ frontend/.env.local
 # --- SONSTIGES ---
 *.zip
 *.log
+.gitignore
