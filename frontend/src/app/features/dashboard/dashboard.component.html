@@ -1,0 +1,167 @@
+<!-- Dashboard Header -->
+<div class="p-8 bg-gradient-to-r from-amber-50 to-orange-50">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">
+          {{ greeting() }}, {{ auth.currentUser()?.username || 'User' }}!
+        </h1>
+        <p class="text-gray-600">Hier ist deine Übersicht für heute</p>
+      </div>
+      <div class="text-right">
+        <div class="text-2xl font-semibold text-gray-900">
+          {{ currentTime() | date: 'HH:mm' }}
+        </div>
+        <div class="text-sm text-gray-600">
+          {{ currentTime() | date: 'EEEE, d. MMMM yyyy' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Dashboard Content -->
+<div class="p-8 bg-gray-50 min-h-screen">
+  <div class="max-w-7xl mx-auto space-y-8">
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      @for (stat of stats(); track stat.title) {
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 cursor-pointer group">
+          <div class="flex items-start justify-between mb-4">
+            <div class="text-4xl group-hover:scale-110 transition-transform">{{ stat.icon }}</div>
+            <div [class]="stat.changeType === 'positive' ? 'text-green-600' : stat.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'" 
+                 class="text-xs font-medium px-2 py-1 rounded-full"
+                 [class.bg-green-100]="stat.changeType === 'positive'"
+                 [class.bg-red-100]="stat.changeType === 'negative'"
+                 [class.bg-gray-100]="stat.changeType === 'neutral'">
+              {{ stat.change }}
+            </div>
+          </div>
+          <div class="text-sm font-medium text-gray-600 mb-1">{{ stat.title }}</div>
+          <div class="text-3xl font-bold text-gray-900">{{ stat.value }}</div>
+        </div>
+      }
+    </div>
+
+    <!-- Alerts Section -->
+    @if (alerts().length > 0) {
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+          <h2 class="text-xl font-bold text-gray-900">Wichtige Meldungen</h2>
+        </div>
+        <div class="divide-y divide-gray-200">
+          @for (alert of alerts(); track alert.id) {
+            <div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                 [class]="getAlertColor(alert.severity)">
+              <div class="flex items-start space-x-3">
+                <span class="text-2xl">{{ getAlertIcon(alert.severity) }}</span>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <h3 class="font-semibold">{{ alert.title }}</h3>
+                    @if (alert.count) {
+                      <span class="text-xs font-medium px-2 py-1 bg-white rounded-full">
+                        {{ alert.count }} Artikel
+                      </span>
+                    }
+                  </div>
+                  <p class="text-sm mt-1">{{ alert.description }}</p>
+                  @if (alert.location) {
+                    <p class="text-xs mt-1 opacity-75">📍 {{ alert.location }}</p>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left Column: Quick Actions + Upcoming Events -->
+      <div class="space-y-8">
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-900">Schnellzugriff</h2>
+          </div>
+          <div class="p-4 grid grid-cols-2 gap-3">
+            @for (action of quickActions(); track action.id) {
+              <button
+                [routerLink]="action.route"
+                class="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-all duration-300 text-center group border border-gray-100 hover:border-amber-200 hover:shadow-sm">
+                <div class="text-3xl mb-2 group-hover:scale-110 transition-transform">
+                  {{ action.icon }}
+                </div>
+                <span class="text-sm font-medium text-gray-900">{{ action.title }}</span>
+                <span class="text-xs text-gray-500 mt-1">{{ action.description }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-900">Anstehende Termine</h2>
+          </div>
+          <div class="p-4 space-y-3">
+            @for (event of upcomingEvents(); track event.id) {
+              <div class="p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border border-amber-100">
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="font-semibold text-gray-900 text-sm">{{ event.title }}</h3>
+                  <span class="text-xs bg-white px-2 py-1 rounded-full text-gray-600">
+                    {{ event.participants }} 👤
+                  </span>
+                </div>
+                <p class="text-xs text-gray-600">📅 {{ event.date }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Recent Activities -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-900">Letzte Aktivitäten</h2>
+            <button class="text-sm text-amber-600 hover:text-amber-700 font-medium">
+              Alle anzeigen →
+            </button>
+          </div>
+          <div class="divide-y divide-gray-200">
+            @for (activity of activities(); track activity.id) {
+              <div class="p-4 hover:bg-gray-50 transition-colors">
+                <div class="flex items-start space-x-3">
+                  <span class="text-2xl">{{ getActivityIcon(activity.type) }}</span>
+                  <div class="flex-1">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900">{{ activity.title }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">{{ activity.description }}</p>
+                        <div class="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                          <span>⏱️ {{ activity.time }}</span>
+                          @if (activity.user) {
+                            <span>• 👤 {{ activity.user }}</span>
+                          }
+                        </div>
+                      </div>
+                      <span [class]="getActivityColor(activity.status)" 
+                            class="text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ml-2">
+                        {{ getStatusBadge(activity.status) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

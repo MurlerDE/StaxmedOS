@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -56,7 +56,7 @@ export class LoginComponent {
     this.auth.login({ username: this.username, password: this.password }).subscribe({
       next: () => {
         this.auth.showLoginModal.set(false); // Modal schließen!
-        this.router.navigate(['/']); // Nach Login zum Dashboard
+        this.router.navigate(['/dashboard']); // Nach Login zum Dashboard
       },
       error: () => {
         this.error.set('Login fehlgeschlagen. Bitte Daten prüfen.');

@@ -1,0 +1,285 @@
+<!-- Hero Section -->
+<section
+  class="relative bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 text-white overflow-hidden"
+>
+  <div class="absolute inset-0 bg-black opacity-10"></div>
+  <div class="absolute inset-0 bg-pattern"></div>
+
+  <div class="relative container mx-auto px-4 py-20 md:py-32">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl md:text-7xl font-extrabold mb-6 animate-fade-in-up leading-tight">
+        Medizinlogistik<br />neu gedacht.
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl mx-auto">
+        StaxmedOS ist das Betriebssystem für deine Rettungswache. Von der Lagerhaltung bis zur
+        Personalplanung – alles in einer Hand.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          (click)="auth.showLoginModal.set(true)"
+          class="bg-white text-amber-600 px-8 py-4 rounded-full text-lg font-bold shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
+        >
+          Jetzt kostenlos testen
+        </button>
+        <button
+          class="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-white hover:text-amber-600 transition-all duration-300"
+        >
+          Demo ansehen
+        </button>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="mt-12 flex flex-wrap justify-center items-center gap-8 text-sm text-white/70">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">✓</span>
+          <span>MPG-konform</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">✓</span>
+          <span>DSGVO-konform</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">✓</span>
+          <span>Made in Germany</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave Divider -->
+  <div class="absolute bottom-0 w-full">
+    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+      <path
+        d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
+        fill="rgb(249, 250, 251)"
+      />
+    </svg>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      @for (benefit of benefits; track benefit.stat) {
+        <div
+          class="text-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+        >
+          <div class="text-5xl font-bold text-amber-600 mb-2">{{ benefit.stat }}</div>
+          <div class="text-lg font-semibold text-gray-900 mb-2">{{ benefit.label }}</div>
+          <div class="text-sm text-gray-600">{{ benefit.description }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        Alle Module, die du brauchst
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        StaxmedOS vereint alle wichtigen Funktionen in einer einzigen, intuitiven Plattform
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      @for (feature of features; track feature.title) {
+        <div
+          class="group p-8 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-amber-200"
+        >
+          <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+            {{ feature.icon }}
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ feature.title }}</h3>
+          <p class="text-gray-600 mb-4">{{ feature.description }}</p>
+          <ul class="space-y-2">
+            @for (highlight of feature.highlights; track highlight) {
+              <li class="flex items-center text-sm text-gray-700">
+                <span class="text-amber-500 mr-2">✓</span>
+                {{ highlight }}
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">So einfach geht's</h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        In nur 3 Schritten zur digitalen Rettungswache
+      </p>
+    </div>
+
+    <div class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div
+            class="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg"
+          >
+            1
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Account erstellen</h3>
+          <p class="text-gray-600">
+            Registriere dich kostenlos und lege deine Rettungswache an. Keine Kreditkarte
+            erforderlich.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg"
+          >
+            2
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Daten importieren</h3>
+          <p class="text-gray-600">
+            Importiere deine bestehenden Daten oder starte direkt mit dem Scannen deines Inventars.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg"
+          >
+            3
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Loslegen</h3>
+          <p class="text-gray-600">
+            Nutze alle Module sofort – auf jedem Gerät, zu jeder Zeit. Dein Team kann direkt
+            starten.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Was unsere Kunden sagen</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      @for (testimonial of testimonials; track testimonial.author) {
+        <div
+          class="bg-gradient-to-br from-amber-50 to-white p-8 rounded-2xl shadow-sm border border-amber-100"
+        >
+          <div class="text-4xl text-amber-500 mb-4">"</div>
+          <p class="text-gray-700 text-lg mb-6 italic">{{ testimonial.quote }}</p>
+          <div class="flex items-center">
+            <div
+              class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4"
+            >
+              {{ testimonial.author.charAt(0) }}
+            </div>
+            <div>
+              <div class="font-semibold text-gray-900">{{ testimonial.author }}</div>
+              <div class="text-sm text-gray-600">{{ testimonial.role }}</div>
+              <div class="text-sm text-gray-500">{{ testimonial.organization }}</div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Transparente Preise</h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Wähle das Modell, das am besten zu deiner Wache passt
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      @for (plan of pricing; track plan.name) {
+        <div
+          class="bg-white rounded-2xl shadow-lg p-8 relative"
+          [class.ring-4]="plan.highlighted"
+          [class.ring-amber-500]="plan.highlighted"
+          [class.scale-105]="plan.highlighted"
+          [class.z-10]="plan.highlighted"
+        >
+          @if (plan.highlighted) {
+            <div
+              class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white px-4 py-1 rounded-full text-sm font-bold"
+            >
+              Empfohlen
+            </div>
+          }
+
+          <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+            <p class="text-gray-600 mb-4">{{ plan.description }}</p>
+            <div class="flex items-baseline justify-center">
+              <span class="text-5xl font-bold text-gray-900">{{ plan.price }}</span>
+              <span class="text-gray-600 ml-2">{{ plan.period }}</span>
+            </div>
+          </div>
+
+          <ul class="space-y-3 mb-8">
+            @for (feature of plan.features; track feature) {
+              <li class="flex items-center text-gray-700">
+                <span class="text-amber-500 mr-3 text-xl">✓</span>
+                {{ feature }}
+              </li>
+            }
+          </ul>
+
+          <button
+            (click)="auth.showLoginModal.set(true)"
+            class="w-full py-3 rounded-lg font-bold transition-all duration-300"
+            [class.bg-amber-500]="plan.highlighted"
+            [class.text-white]="plan.highlighted"
+            [class.hover:bg-amber-600]="plan.highlighted"
+            [class.bg-gray-100]="!plan.highlighted"
+            [class.text-gray-900]="!plan.highlighted"
+            [class.hover:bg-gray-200]="!plan.highlighted"
+          >
+            Jetzt starten
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="text-center mt-12">
+      <p class="text-gray-600">
+        Alle Preise zzgl. MwSt. • 30 Tage Geld-zurück-Garantie • Keine Vertragsbindung
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-amber-500 to-orange-600 text-white">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-4xl md:text-5xl font-bold mb-6">Bereit für die digitale Zukunft?</h2>
+    <p class="text-xl mb-8 max-w-2xl mx-auto text-white/90">
+      Starte noch heute mit StaxmedOS und erlebe, wie einfach moderne Medizinlogistik sein kann.
+    </p>
+    <button
+      (click)="auth.showLoginModal.set(true)"
+      class="bg-white text-amber-600 px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
+    >
+      30 Tage kostenlos testen
+    </button>
+    <p class="text-sm mt-4 text-white/70">
+      Keine Kreditkarte erforderlich • In 2 Minuten startklar
+    </p>
+  </div>
+</section>

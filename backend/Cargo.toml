@@ -1,7 +1,11 @@
 [package]
 name = "backend"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+
+[[bin]]
+name = "backend"
+path = "apps/src/main.rs"
 
 [dependencies]
 # Web Framework & Async

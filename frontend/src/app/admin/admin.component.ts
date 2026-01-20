@@ -17,8 +17,6 @@ export class AdminComponent implements OnInit {
   }
 
   loadTenants() {
-    this.http
-      .get<any[]>('http://127.0.0.1:3000/api/admin/tenants')
-      .subscribe((data) => this.tenants.set(data));
+    this.http.get<any[]>('/api/v1/admin/tenants').subscribe((data) => this.tenants.set(data));
   }
 }

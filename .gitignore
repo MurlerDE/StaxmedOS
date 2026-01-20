@@ -12,6 +12,7 @@ Thumbs.db
 
 # --- BACKEND (Rust/Cargo) ---
 backend/target/
+target
 # Wir ignorieren die .env Datei, weil darin dein DB-Passwort steht!
 backend/.env
 # Falls du sqlx-data.json für Offline-Kompilierung nutzt:
