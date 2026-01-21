@@ -13,16 +13,16 @@ BASE_PATH="frontend/src/app/features/$FEATURE_NAME"
 # 1. Ordnerstruktur erstellen
 mkdir -p "$BASE_PATH/components"
 mkdir -p "$BASE_PATH/services"
-mkdir -p "$BASE_PATH/views/inv-mobile"
-mkdir -p "$BASE_PATH/views/inv-tablet"
-mkdir -p "$BASE_PATH/views/inv-desktop"
+mkdir -p "$BASE_PATH/views/mobile"
+mkdir -p "$BASE_PATH/views/tablet"
+mkdir -p "$BASE_PATH/views/desktop"
 
 # 2. Angular CLI nutzen für die Grund-Komponenten (Standalone)
 # Wir nutzen --skip-tests für den Anfang, falls du sie nicht sofort brauchst
 ng g c "features/$FEATURE_NAME" --standalone --inline-template --inline-style
-ng g c "features/$FEATURE_NAME/views/inv-mobile" --standalone
-ng g c "features/$FEATURE_NAME/views/inv-tablet" --standalone
-ng g c "features/$FEATURE_NAME/views/inv-desktop" --standalone
+ng g c "features/$FEATURE_NAME/views/mobile" --standalone
+ng g c "features/$FEATURE_NAME/views/tablet" --standalone
+ng g c "features/$FEATURE_NAME/views/desktop" --standalone
 
 # 3. Routing Datei erstellen
 cat <<EOF > "$BASE_PATH/$FEATURE_NAME-routing.ts"

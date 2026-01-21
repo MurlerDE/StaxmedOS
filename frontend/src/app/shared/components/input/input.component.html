@@ -1,0 +1,37 @@
+<input
+  [type]="type()"
+  class="block w-full py-1.5 px-3 text-gray-200 border border-gray-400 transition duration-500, focus:outline-none rounded bg-transparent focus:border-indigo-400"
+  [placeholder]="placeholder()"
+  [formControl]="control()"
+  [mask]="format()"
+  [dropSpecialCharacters]="false"
+/>
+@if (control().touched && control().dirty) {
+  @if (control().hasError('required')) {
+    <p class="text-red-400">Feld ist erforderlich.</p>
+  }
+  @if (control().hasError('minlength')) {
+    <p class="text-red-400">
+      Mindestens {{ control().getError('minlength').requiredLength }} Zeichen erforderlich. Aktuell
+      {{ control().getError('minlength').actualLength }} Zeichen.
+    </p>
+  }
+  @if (control().hasError('email')) {
+    <p class="text-red-400">Ungültige E-Mail-Adresse.</p>
+  }
+  @if (control().hasError('min')) {
+    <p class="text-red-400">Zu klein.</p>
+  }
+  @if (control().hasError('max')) {
+    <p class="text-red-400">Zu groß.</p>
+  }
+  @if (control().hasError('pattern')) {
+    <p class="text-red-400">
+      Passwort muss mindestens 8 Zeichen lang sein und mindestens eine Zahl, ein Sonderzeichen
+      enthalten, ein Großbuchstabe und ein Kleinbuchstabe enthalten.
+    </p>
+  }
+  @if (control().hasError('noMatch')) {
+    <p class="text-red-400">Passwörter stimmen nicht überein.</p>
+  }
+}
