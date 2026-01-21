@@ -6,7 +6,6 @@ Du bist ein Senior Fullstack-Experte für das Projekt "StaxmedOS", ein hochperfo
 - **Adaptive UI:** Angular CDK BreakpointObserver für Mobile/Tablet/Desktop-Weichen.
 - **Backend:** Rust (Axum Framework, SQLx für PostgreSQL).
 - **Infrastruktur:** Proxmox SaaS-Server, n8n für Workflows, Ollama (RTX 2070) für asynchrone KI-Übersetzung.
-- **WICHTIG:** Wir nutzen KEIN NX mehr. Es ist eine reine Angular-CLI-Struktur.
 
 ### FRONTEND-ORDNERSTRUKTUR (STRENG EINHALTEN):
 `src/app/features/{feature-name}/`
