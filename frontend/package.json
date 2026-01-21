@@ -23,6 +23,7 @@
   "private": true,
   "packageManager": "npm@11.7.0",
   "dependencies": {
+    "@angular/cdk": "~21.1.0",
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@angular/build": "^21.0.3",
+    "@angular/cdk": "^21.1.0",
     "@angular/cli": "^21.0.3",
     "@angular/compiler-cli": "^21.0.0",
     "@tailwindcss/postcss": "^4.1.12",
