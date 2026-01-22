@@ -1,9 +1,11 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { AuthService } from './auth.service';
+import { ModalService } from '../services/modal.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
+  const modalService = inject(ModalService);
   const router = inject(Router);
 
   if (authService.isLoggedIn()) {
@@ -11,7 +13,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 
   // User ist nicht eingeloggt, zeige Login-Modal
-  authService.showLoginModal.set(true);
+  modalService.openLoginModal();
   return false;
 };
 

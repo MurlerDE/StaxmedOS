@@ -1,24 +1,2 @@
-<!-- Root App Component: Nur Router Outlet + Login Modal -->
+<!-- Root App Component: Nur Router Outlet -->
 <router-outlet />
-
-<!-- Login Modal (global) -->
-@if (auth.showLoginModal()) {
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div
-    class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
-    (click)="auth.showLoginModal.set(false)"
-  ></div>
-  <div
-    class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md relative z-10 animate-in fade-in zoom-in duration-200"
-  >
-    <button
-      (click)="auth.showLoginModal.set(false)"
-      class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-    >
-      ✕
-    </button>
-    <h2 class="text-2xl font-bold text-amber-500 mb-6 text-center">Willkommen zurück</h2>
-    <app-login />
-  </div>
-</div>
-}

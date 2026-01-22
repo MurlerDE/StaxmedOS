@@ -16,7 +16,7 @@
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button
-          (click)="auth.showLoginModal.set(true)"
+          (click)="modalService.openLoginModal()"
           class="bg-white text-amber-600 px-8 py-4 rounded-full text-lg font-bold shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
         >
           Jetzt kostenlos testen
@@ -242,7 +242,7 @@
           </ul>
 
           <button
-            (click)="auth.showLoginModal.set(true)"
+            (click)="modalService.openLoginModal()"
             class="w-full py-3 rounded-lg font-bold transition-all duration-300"
             [class.bg-amber-500]="plan.highlighted"
             [class.text-white]="plan.highlighted"
@@ -273,7 +273,7 @@
       Starte noch heute mit StaxmedOS und erlebe, wie einfach moderne Medizinlogistik sein kann.
     </p>
     <button
-      (click)="auth.showLoginModal.set(true)"
+      (click)="modalService.openLoginModal()"
       class="bg-white text-amber-600 px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300"
     >
       30 Tage kostenlos testen

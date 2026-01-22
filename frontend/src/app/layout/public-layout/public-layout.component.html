@@ -8,7 +8,7 @@
         <ul class="flex space-x-6">
           <li>
             <button
-              (click)="auth.showLoginModal.set(true)"
+              (click)="modalService.openLoginModal()"
               class="font-bold border-2 border-white px-4 py-1 rounded-lg hover:bg-white hover:text-amber-500 transition"
             >
               Login
@@ -28,4 +28,7 @@
   <footer class="bg-gray-800 text-white py-4 text-center text-sm border-t border-gray-700">
     <p>&copy; 2026 StaxmedOS - Intelligente Medizinlogistik</p>
   </footer>
+
+  <!-- Login Modal -->
+  <app-login-modal />
 </div>

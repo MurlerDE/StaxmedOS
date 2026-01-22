@@ -16,7 +16,6 @@ export class AuthService {
 
   isLoggedIn = computed(() => this.currentUser() !== null);
   isAdmin = computed(() => this.currentUser()?.role === 'admin');
-  showLoginModal = signal(false);
 
   constructor() {
     // Beim Start: Wenn Token vorhanden, User-Daten wiederherstellen
