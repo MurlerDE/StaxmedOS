@@ -13,6 +13,10 @@ use chrono::{Utc, Duration};
 use uuid::Uuid;
 use std::sync::Arc;
 use crate::config::AppConfig;
+use argon2::{
+    password_hash::{rand_core::OsRng, PasswordHasher, PasswordVerifier, SaltString},
+    Argon2
+};
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -38,6 +42,13 @@ pub struct UserInfo {
 pub struct AdminUser {
     pub user_id: Uuid,
     pub tenant_id: Uuid,
+}
+
+#[derive(Deserialize)]
+pub struct RegisterRequest {
+    pub username: String,
+    pub password: String,
+    pub tenant_id: Option<Uuid>,
 }
 
 // Extractor für jeden authentifizierten User (nicht nur Admins)
@@ -157,6 +168,7 @@ where S: Send + Sync {
 pub fn router() -> Router {
     Router::new()
         .route("/login", post(login_handler))
+        .route("/register", post(register_handler))
         .route("/me", get(me_handler))
 }
 
@@ -212,4 +224,34 @@ async fn login_handler(
         username: payload.username,
         role: claims.role,
     }))
+}
+
+async fn register_handler(
+    Extension(pool): Extension<PgPool>,
+    Json(payload): Json<RegisterRequest>,
+) -> Result<StatusCode, (StatusCode, String)> {
+    // 1. Passwort hashen
+    let salt = SaltString::generate(&mut OsRng);
+    let argon2 = Argon2::default();
+    let password_hash = argon2
+        .hash_password(payload.password.as_bytes(), &salt)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Fehler beim Hashing".into()))?
+        .to_string();
+
+    // 2. User in DB speichern
+    sqlx::query!(
+        "INSERT INTO users (id, username, password_hash, role, tenant_id, is_active) 
+         VALUES ($1, $2, $3, $4, $5, $6)",
+        Uuid::new_v4(),
+        payload.username,
+        password_hash,
+        "user", // Standardrolle
+        payload.tenant_id,
+        true
+    )
+    .execute(&pool)
+    .await
+    .map_err(|e| (StatusCode::BAD_REQUEST, format!("User existiert bereits oder DB-Fehler: {}", e)))?;
+
+    Ok(StatusCode::CREATED)
 }
