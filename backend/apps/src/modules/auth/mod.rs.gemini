@@ -1,0 +1,107 @@
+// Ergänze diese Imports oben
+use argon2::PasswordHash;
+
+#[derive(Deserialize)]
+pub struct RegisterRequest {
+    pub email: String,      // Wird als username genutzt
+    pub password: String,
+    pub organization_name: String, 
+}
+
+// --- LOGIN HANDLER ---
+async fn login_handler(
+    Extension(pool): Extension<PgPool>,
+    Extension(config): Extension<Arc<AppConfig>>,
+    Json(payload): Json<LoginRequest>,
+) -> Result<Json<AuthResponse>, (StatusCode, String)> {
+
+    // 1. User suchen (Inklusive Tenant-Info für den Token)
+    let user = sqlx::query_as!(
+        UserRecord,
+        "SELECT id, password_hash, role, tenant_id FROM users WHERE username = $1 AND is_active = true",
+        payload.username
+    )
+    .fetch_optional(&pool)
+    .await
+    .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Datenbankfehler".into()))?
+    .ok_or((StatusCode::UNAUTHORIZED, "Ungültige Anmeldedaten".into()))?;
+
+    // 2. Passwort prüfen (Argon2 Verifizierung)
+    let hash = user.password_hash.ok_or((StatusCode::INTERNAL_SERVER_ERROR, "Hash-Fehler".into()))?;
+    let parsed_hash = PasswordHash::new(&hash)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Ungültiges Hash-Format".into()))?;
+
+    Argon2::default()
+        .verify_password(payload.password.as_bytes(), &parsed_hash)
+        .map_err(|_| (StatusCode::UNAUTHORIZED, "Ungültige Anmeldedaten".into()))?;
+
+    // 3. Token erstellen
+    let expiration = Utc::now()
+        .checked_add_signed(Duration::hours(24))
+        .expect("valid timestamp")
+        .timestamp() as usize;
+
+    let claims = Claims {
+        sub: user.id.to_string(),
+        tenant_id: user.tenant_id.map(|id| id.to_string()).unwrap_or_default(),
+        role: user.role.unwrap_or_else(|| "user".into()),
+        exp: expiration,
+    };
+
+    let token = encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(config.jwt_secret.as_ref()),
+    ).map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Token-Fehler".into()))?;
+
+    Ok(Json(AuthResponse {
+        token,
+        username: payload.username,
+        role: claims.role,
+    }))
+}
+
+// --- REGISTER HANDLER ---
+async fn register_handler(
+    Extension(pool): Extension<PgPool>,
+    Json(payload): Json<RegisterRequest>,
+) -> Result<StatusCode, (StatusCode, String)> {
+    
+    // Transaktion starten: Entweder alles oder nichts!
+    let mut tx = pool.begin().await
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Transaktionsfehler".into()))?;
+
+    // 1. Tenant (Organisation) erstellen
+    let tenant_id = sqlx::query_scalar!(
+        "INSERT INTO tenants (name, status) VALUES ($1, 'trial') RETURNING id",
+        payload.organization_name
+    )
+    .fetch_one(&mut *tx)
+    .await
+    .map_err(|e| (StatusCode::BAD_REQUEST, format!("Fehler beim Anlegen der Organisation: {}", e)))?;
+
+    // 2. Passwort hashen
+    let salt = SaltString::generate(&mut OsRng);
+    let password_hash = Argon2::default()
+        .hash_password(payload.password.as_bytes(), &salt)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Fehler beim Hashing".into()))?
+        .to_string();
+
+    // 3. Admin-User für diesen Tenant erstellen
+    sqlx::query!(
+        "INSERT INTO users (username, password_hash, role, tenant_id) VALUES ($1, $2, $3, $4)",
+        payload.email,
+        password_hash,
+        "admin", // Der erste User ist immer Admin
+        tenant_id
+    )
+    .execute(&mut *tx)
+    .await
+    .map_err(|_| (StatusCode::BAD_REQUEST, "Benutzer existiert bereits".into()))?;
+
+    // Alles speichern
+    tx.commit().await
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Fehler beim Abschluss der Registrierung".into()))?;
+
+    Ok(StatusCode::CREATED)
+}
