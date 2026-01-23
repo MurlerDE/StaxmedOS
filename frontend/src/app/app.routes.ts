@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, adminGuard, publicGuard } from './core/auth/auth.guard';
+import { authGuard, adminGuard, publicGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // Authenticated routes (App Layout with Sidebar) - these come FIRST

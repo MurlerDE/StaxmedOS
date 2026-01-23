@@ -8,7 +8,7 @@
         <ul class="flex space-x-6">
           <li>
             <button
-              (click)="modalService.openLoginModal()"
+              (click)="openModal($event)"
               class="font-bold border-2 border-white px-4 py-1 rounded-lg hover:bg-white hover:text-amber-500 transition"
             >
               Login
@@ -30,5 +30,5 @@
   </footer>
 
   <!-- Login Modal -->
-  <app-login-modal />
+  <app-auth-modal></app-auth-modal>
 </div>

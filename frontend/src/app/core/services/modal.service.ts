@@ -1,5 +1,5 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from './auth.service';
 
 interface IModal {
   id: string;

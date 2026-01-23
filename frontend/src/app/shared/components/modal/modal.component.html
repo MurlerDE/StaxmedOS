@@ -1,0 +1,17 @@
+<dialog
+  #baseDialog
+  (click)="modal.toggle(id())"
+  class="fixed z-50 inset-0 overflow-y-auto backdrop:bg-black/50 text-white m-in-w-96 w-3/6 m-auto"
+>
+  <div (click)="$event.stopPropagation()" class="flex flex-col p-4 bg-amber-300">
+    <!-- Title -->
+    <div class="flex justify-between items-center pb-4">
+      <ng-content select="[heading]"></ng-content>
+      <!-- Modal Close Button -->
+      <div class="modal-close cursor-pointer z-50" (click)="modal.toggle(id())">&#x2715;</div>
+    </div>
+
+    <!-- Tabs -->
+    <ng-content></ng-content>
+  </div>
+</dialog>
