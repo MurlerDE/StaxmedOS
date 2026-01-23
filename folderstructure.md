@@ -2,7 +2,7 @@
 
 Nach dem Refactoring spiegelt diese Datei die aktuelle, tatsächlich vorhandene Ordnerstruktur und Konventionen wider. Nutze sie als Referenz für neues Feature-Scaffolding und Code-Placement.
 
-`StaxmedOS/
+```StaxmedOS/
 ├── .github/                     # CI-Workflows, Issue/PR-Templates
 ├── .zed/                        # Editor- / Dev-Configs (Zed-specific)
 ├── .app/                        # Projekt-bezogene Notizen / Status (Stand_...)
@@ -78,7 +78,7 @@ Nach dem Refactoring spiegelt diese Datei die aktuelle, tatsächlich vorhandene 
 │               └── skills/
 
 └── docs/ (optional)             # Compliance, Architektur, Prozesse
-`
+```
 
 Konventionen & Hinweise
 - Feature-Layout: Jeder Feature-Ordner muss die Unterordner `components/`, `services/` und `views/{mobile,tablet,desktop}` enthalten.
