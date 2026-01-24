@@ -14,8 +14,16 @@ use crate::config::{AppConfig, StaxMode};
 
 #[tokio::main]
 async fn main() {
-    // Load .env from backend directory when running from root
-    dotenvy::from_path("backend/.env").ok();
+    // Load .env - try multiple paths
+    let env_loaded = dotenvy::dotenv().is_ok()
+        || dotenvy::from_path("backend/.env").is_ok()
+        || dotenvy::from_path(".env").is_ok();
+
+    if !env_loaded {
+        eprintln!("Warning: Could not load .env file from any location");
+        eprintln!("Tried: ./.env, backend/.env");
+        eprintln!("Current directory: {:?}", std::env::current_dir());
+    }
 
     // 1. Zentrale Konfiguration laden
     let config = Arc::new(AppConfig::from_env());
@@ -48,6 +56,7 @@ async fn main() {
         .route("/healthy", get(health_check))
         .nest("/inventory", modules::inventory::router())
         .nest("/auth", modules::auth::router())
+        .nest("/users", modules::users::router())
         .nest("/admin", modules::admin::router())
         .nest("/system", modules::system::router());
 

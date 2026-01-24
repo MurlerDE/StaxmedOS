@@ -1,7 +1,7 @@
 <dialog
   #baseDialog
   (click)="modal.toggle(id())"
-  class="fixed z-50 inset-0 overflow-y-auto backdrop:bg-black/50 text-white m-in-w-96 w-3/6 m-auto"
+  class="fixed z-50 inset-0 overflow-y-auto backdrop:bg-black/50 text-white min-w-96 w-2xs m-auto rounded"
 >
   <div (click)="$event.stopPropagation()" class="flex flex-col p-4 bg-amber-300">
     <!-- Title -->
@@ -11,7 +11,7 @@
       <div class="modal-close cursor-pointer z-50" (click)="modal.toggle(id())">&#x2715;</div>
     </div>
 
-    <!-- Tabs -->
+    <!-- Modal Content -->
     <ng-content></ng-content>
   </div>
 </dialog>

@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT udi_di, brand_name_de, manufacturer FROM global_products WHERE udi_di = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "udi_di",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "brand_name_de",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "manufacturer",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "6f1f081696fdaa4283f239a76f77ee4005f8ee1217bfd1a58036427359c31e3f"
+}

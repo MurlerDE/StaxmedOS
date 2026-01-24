@@ -73,7 +73,22 @@ export const routes: Routes = [
     ],
   },
 
-  // Admin routes (Authenticated + Admin only)
+  // Tenant Admin routes (Authenticated + Admin only - for managing users within tenant)
+  {
+    path: 'tenant-admin',
+    loadComponent: () =>
+      import('./layout/app-layout/app-layout.component').then((m) => m.AppLayoutComponent),
+    canActivate: [adminGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./features/tenant-admin/tenant-admin.routes').then((m) => m.TENANT_ADMIN_ROUTES),
+      },
+    ],
+  },
+
+  // Admin routes (Authenticated + Admin only - for StaxAdmin system-wide management)
   {
     path: 'admin',
     loadComponent: () =>

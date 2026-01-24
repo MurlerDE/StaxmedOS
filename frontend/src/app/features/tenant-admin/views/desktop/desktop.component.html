@@ -1,0 +1,610 @@
+<!-- Tenant Admin: User Management -->
+<div class="h-screen flex flex-col bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Benutzerverwaltung</h1>
+        <p class="text-sm text-gray-600 mt-1">Verwalten Sie Benutzer und deren Berechtigungen</p>
+      </div>
+      @if (canCreateUsers()) {
+        <button
+          (click)="openCreateModal()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Neuer Benutzer
+        </button>
+      }
+    </div>
+  </header>
+
+  <!-- Alerts -->
+  @if (errorMessage()) {
+    <div class="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <span class="text-red-800">{{ errorMessage() }}</span>
+      </div>
+      <button (click)="errorMessage.set(null)" class="text-red-600 hover:text-red-800">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="mx-6 mt-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <span class="text-green-800">{{ successMessage() }}</span>
+      </div>
+      <button (click)="successMessage.set(null)" class="text-green-600 hover:text-green-800">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+  }
+
+  <!-- Main Content: Split View -->
+  <div class="flex-1 flex overflow-hidden">
+    <!-- User List (Left) -->
+    <div class="w-1/3 bg-white border-r border-gray-200 overflow-y-auto">
+      @if (loading()) {
+        <div class="flex items-center justify-center h-full">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      } @else if (users().length === 0) {
+        <div class="flex flex-col items-center justify-center h-full text-gray-500">
+          <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <p class="text-lg font-medium">Keine Benutzer vorhanden</p>
+          <p class="text-sm mt-1">Erstellen Sie Ihren ersten Benutzer</p>
+        </div>
+      } @else {
+        <div class="divide-y divide-gray-200">
+          @for (user of users(); track user.id) {
+            <div
+              (click)="selectUser(user)"
+              [class.bg-blue-50]="selectedUser()?.id === user.id"
+              [class.border-l-4]="selectedUser()?.id === user.id"
+              [class.border-blue-600]="selectedUser()?.id === user.id"
+              class="p-4 hover:bg-gray-50 cursor-pointer transition"
+            >
+              <div class="flex items-center gap-3">
+                <!-- Avatar -->
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                  {{ getInitials(user) }}
+                </div>
+
+                <!-- User Info -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <p class="font-semibold text-gray-900 truncate">
+                      {{ getDisplayName(user) }}
+                    </p>
+                    @if (!user.is_active) {
+                      <span class="px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded">
+                        Inaktiv
+                      </span>
+                    }
+                  </div>
+                  <p class="text-sm text-gray-600 truncate">{{ user.username }}</p>
+                  <div class="flex items-center gap-1 mt-1">
+                    <span [class]="getRoleBadgeColor(user.role)" class="px-2 py-0.5 text-xs text-white rounded">
+                      {{ user.role }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- User Details (Right) -->
+    <div class="flex-1 overflow-y-auto p-6">
+      @if (!selectedUser()) {
+        <div class="flex flex-col items-center justify-center h-full text-gray-400">
+          <svg class="w-24 h-24 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+          <p class="text-lg font-medium">Kein Benutzer ausgewählt</p>
+          <p class="text-sm mt-1">Wählen Sie einen Benutzer aus der Liste</p>
+        </div>
+      } @else {
+        <div class="max-w-4xl">
+          <!-- User Header -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl">
+                  {{ getInitials(selectedUser()!) }}
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-gray-900">
+                    {{ getDisplayName(selectedUser()!) }}
+                  </h2>
+                  <p class="text-gray-600">{{ selectedUser()!.username }}</p>
+                  <div class="flex items-center gap-2 mt-2">
+                    @if (selectedUser()!.is_active) {
+                      <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                        Aktiv
+                      </span>
+                    } @else {
+                      <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
+                        Inaktiv
+                      </span>
+                    }
+                    <span class="text-sm text-gray-500">
+                      Erstellt: {{ formatDate(selectedUser()!.created_at) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex gap-2">
+                @if (canEditUsers()) {
+                  <button
+                    (click)="openEditModal()"
+                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                    title="Bearbeiten"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                  </button>
+                }
+                @if (canEditUsers()) {
+                  <button
+                    (click)="openPasswordModal()"
+                    class="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition"
+                    title="Passwort ändern"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                      />
+                    </svg>
+                  </button>
+                }
+                @if (canDeleteUsers()) {
+                  <button
+                    (click)="confirmDelete(selectedUser()!)"
+                    class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                    title="Löschen"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Roles Section -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Zugewiesene Rollen</h3>
+              @if (canManagePermissions()) {
+                <button
+                  (click)="openRoleModal()"
+                  class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                  Rolle zuweisen
+                </button>
+              }
+            </div>
+
+            @if (selectedUser()!.roles.length === 0) {
+              <p class="text-gray-500 text-sm">Keine Rollen zugewiesen</p>
+            } @else {
+              <div class="space-y-2">
+                @for (role of selectedUser()!.roles; track role.role_id) {
+                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p class="font-medium text-gray-900">{{ role.display_name }}</p>
+                      <p class="text-sm text-gray-600">{{ role.role_name }}</p>
+                      <p class="text-xs text-gray-500 mt-1">
+                        Zugewiesen: {{ formatDate(role.assigned_at) }}
+                      </p>
+                    </div>
+                    @if (canManagePermissions()) {
+                      <button
+                        (click)="removeRole(role.role_id)"
+                        class="text-red-600 hover:text-red-800 transition"
+                      >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Permissions Section -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Berechtigungen</h3>
+
+            @if (selectedUser()!.permissions.length === 0) {
+              <p class="text-gray-500 text-sm">Keine Berechtigungen zugewiesen</p>
+            } @else {
+              <div class="grid grid-cols-2 gap-3">
+                @for (perm of selectedUser()!.permissions; track perm.permission_name) {
+                  <div class="p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1">
+                        <p class="font-mono text-xs text-blue-600">{{ perm.permission_name }}</p>
+                        <p class="text-xs text-gray-500 mt-1">Quelle: {{ perm.source }}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Create User -->
+@if (showCreateModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Neuen Benutzer erstellen</h2>
+
+      <form (ngSubmit)="createUser()">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Benutzername *</label>
+            <input
+              type="text"
+              [(ngModel)]="newUser.username"
+              name="username"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Passwort *</label>
+            <input
+              type="password"
+              [(ngModel)]="newUser.password"
+              name="password"
+              required
+              minlength="8"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p class="text-xs text-gray-500 mt-1">Mindestens 8 Zeichen</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Vorname</label>
+            <input
+              type="text"
+              [(ngModel)]="newUser.first_name"
+              name="first_name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nachname</label>
+            <input
+              type="text"
+              [(ngModel)]="newUser.last_name"
+              name="last_name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Rolle</label>
+            <select
+              [(ngModel)]="selectedRoleId"
+              name="role"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Standard (Paramedic)</option>
+              @for (role of availableRoles(); track role.id) {
+                <option [value]="role.id">{{ role.display_name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button
+            type="button"
+            (click)="closeAllModals()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            [disabled]="loading()"
+            class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {{ loading() ? 'Erstelle...' : 'Erstellen' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Modal: Edit User -->
+@if (showEditModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Benutzer bearbeiten</h2>
+
+      <form (ngSubmit)="updateUser()">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Vorname</label>
+            <input
+              type="text"
+              [(ngModel)]="editUser.first_name"
+              name="first_name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nachname</label>
+            <input
+              type="text"
+              [(ngModel)]="editUser.last_name"
+              name="last_name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              [(ngModel)]="editUser.is_active"
+              name="is_active"
+              id="is_active"
+              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <label for="is_active" class="text-sm font-medium text-gray-700">Benutzer aktiv</label>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button
+            type="button"
+            (click)="closeAllModals()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            [disabled]="loading()"
+            class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {{ loading() ? 'Speichere...' : 'Speichern' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Modal: Change Password -->
+@if (showPasswordModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Passwort ändern</h2>
+
+      <form (ngSubmit)="updatePassword()">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Neues Passwort</label>
+            <input
+              type="password"
+              [(ngModel)]="newPassword"
+              name="newPassword"
+              required
+              minlength="8"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Passwort bestätigen</label>
+            <input
+              type="password"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button
+            type="button"
+            (click)="closeAllModals()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            [disabled]="loading()"
+            class="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition disabled:opacity-50"
+          >
+            {{ loading() ? 'Ändere...' : 'Ändern' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Modal: Assign Role -->
+@if (showRoleModal()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Rolle zuweisen</h2>
+
+      <form (ngSubmit)="assignRole()">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Rolle auswählen</label>
+          <select
+            [(ngModel)]="selectedRoleId"
+            name="roleId"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">-- Bitte wählen --</option>
+            @for (role of availableRoles(); track role.id) {
+              <option [value]="role.id">
+                {{ role.display_name }} ({{ role.permission_count }} Permissions)
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button
+            type="button"
+            (click)="closeAllModals()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            [disabled]="loading() || !selectedRoleId"
+            class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {{ loading() ? 'Zuweisen...' : 'Zuweisen' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Modal: Delete Confirmation -->
+@if (showDeleteConfirm()) {
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900">Benutzer löschen</h2>
+      </div>
+
+      <p class="text-gray-700 mb-6">
+        Möchten Sie den Benutzer <strong>{{ userToDelete?.username }}</strong> wirklich löschen?
+        Diese Aktion kann nicht rückgängig gemacht werden
+      </p>
+
+      <div class="flex gap-3">
+        <button
+          type="button"
+          (click)="closeAllModals()"
+          class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+        >
+          Abbrechen
+        </button>
+        <button
+          type="button"
+          (click)="deleteUser()"
+          [disabled]="loading()"
+          class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50"
+        >
+          {{ loading() ? "Lösche..." : "Löschen" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -43,13 +43,27 @@
               </a>
             </li>
           }
-          @if (auth.isAdmin()) {
+
+          <!-- Tenant Admin Bereich -->
+          @if (auth.isTenantAdmin()) {
+            <li class="mt-8 pt-6 border-t border-gray-700">
+              <a
+                routerLink="/tenant-admin"
+                class="block px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 text-center font-bold transition"
+              >
+                ⚙️ Administration
+              </a>
+            </li>
+          }
+
+          <!-- StaxMed System-Verwaltung (nur für StaxMed Mitarbeiter) -->
+          @if (auth.isStaxAdmin()) {
             <li class="mt-8 pt-6 border-t border-gray-700">
               <a
                 routerLink="/admin"
-                class="block px-4 py-2 bg-amber-600 rounded-lg hover:bg-amber-700 text-center font-bold transition"
+                class="block px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 text-center font-bold transition"
               >
-                StaxAdmin
+                🔧 System-Verwaltung
               </a>
             </li>
           }
