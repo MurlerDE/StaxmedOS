@@ -1,3 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
+@import 'tailwindcss';
+
+:root {
+  --primary-background-color: oklch(27.8% 0.033 256.848);
+  --secondary-background-color: oklch(0.705 0.193 47.604 / 99%);
+  --primary-text-color: oklch(85.1% 0 0);
+  --secondary-text-color: oklch(95.1% 0 0);
+}

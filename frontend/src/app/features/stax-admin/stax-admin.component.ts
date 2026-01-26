@@ -9,17 +9,21 @@ import {
   CreateUserRequest,
 } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
+import { TenantsComponent } from './tenants/tenants.component';
 
 @Component({
   selector: 'app-stax-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TenantsComponent],
   templateUrl: './stax-admin.component.html',
   styleUrl: './stax-admin.component.css',
 })
 export class StaxAdminComponent implements OnInit {
   private userService = inject(UserService);
   auth = inject(AuthService);
+
+  // Active Tab
+  activeTab: 'tenants' | 'users' = 'tenants';
 
   // State
   users = signal<User[]>([]);
