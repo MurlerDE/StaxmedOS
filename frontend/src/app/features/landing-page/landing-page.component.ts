@@ -8,7 +8,7 @@ import { ModalService } from '../../core/services/modal.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css',
+  styleUrl: './landing-page.component.scss',
 })
 export class LandingPageComponent {
   auth = inject(AuthService);

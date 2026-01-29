@@ -1,0 +1,52 @@
+// src/styles/_layout.scss
+@use 'variables' as v;
+
+// Container System
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 v.$spacing-md;
+}
+
+// Flexbox & Grid Basics
+.flex {
+  display: flex;
+  &.center {
+    align-items: center;
+    justify-content: center;
+  }
+  &.column {
+    flex-direction: column;
+  }
+  &.between {
+    justify-content: space-between;
+  }
+}
+
+.grid {
+  display: grid;
+  &.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  &.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  gap: v.$spacing-md;
+}
+
+// Spacing Utilities (automatisch generiert)
+$sides: (
+  top: t,
+  bottom: b,
+  left: l,
+  right: r,
+);
+@each $name, $alias in $sides {
+  .m#{$alias}-20 {
+    margin-#{$name}: 5rem;
+  }
+  .p#{$alias}-20 {
+    padding-#{$name}: 5rem;
+  }
+}

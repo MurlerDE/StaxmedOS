@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as model from '../models/index';
 
 export interface User {
   id: string;
@@ -114,15 +115,11 @@ export class UserService {
   }
 
   // Permission Management
-  getUserPermissions(userId: string): Observable<Permission[]> {
-    return this.http.get<Permission[]>(`${this.API_URL}/${userId}/permissions`);
+  getUserPermissions(userId: string): Observable<model.PermissionInfo[]> {
+    return this.http.get<model.PermissionInfo[]>(`${this.API_URL}/${userId}/permissions`);
   }
 
-  assignPermission(
-    userId: string,
-    permissionName: string,
-    expiresAt?: string
-  ): Observable<void> {
+  assignPermission(userId: string, permissionName: string, expiresAt?: string): Observable<void> {
     return this.http.post<void>(`${this.API_URL}/${userId}/permissions`, {
       permission_name: permissionName,
       expires_at: expiresAt,
@@ -130,9 +127,7 @@ export class UserService {
   }
 
   removePermission(userId: string, permissionId: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.API_URL}/${userId}/permissions/${permissionId}`
-    );
+    return this.http.delete<void>(`${this.API_URL}/${userId}/permissions/${permissionId}`);
   }
 
   // Available Roles & Permissions
@@ -141,8 +136,6 @@ export class UserService {
   }
 
   listAvailablePermissions(): Observable<PermissionListItem[]> {
-    return this.http.get<PermissionListItem[]>(
-      `${this.API_URL}/permissions/available`
-    );
+    return this.http.get<PermissionListItem[]>(`${this.API_URL}/permissions/available`);
   }
 }

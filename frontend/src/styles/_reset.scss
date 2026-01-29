@@ -1,0 +1,63 @@
+/* Modern Reset */
+
+// 1. Box-sizing auf alle Elemente anwenden
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// 2. Abstände entfernen und Scroll-Verhalten optimieren
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+// 3. Body-Setup für Full-Height-Apps (wichtig für Angular)
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  font-family: sans-serif; // Wird später durch deine Variablen überschrieben
+  -webkit-font-smoothing: antialiased;
+}
+
+// 4. Bilder-Handling (verhindert das "Herauslaufen" aus Containern)
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+// 5. Form-Elemente erben Schriftarten
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+// 6. Animationen ausschalten für User, die "Reduced Motion" bevorzugen
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// 7. Angular-spezifisch: Host-Elemente (verhindert Layout-Gaps)
+app-root {
+  display: block;
+}

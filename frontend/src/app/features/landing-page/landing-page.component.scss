@@ -1,0 +1,132 @@
+// Wir nutzen die globalen Variablen und Mixins
+@use 'variables' as v;
+@use 'mixins' as m;
+
+// --- Animationen ---
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+// --- Scoped Styles für die Landing Page ---
+:host {
+  display: block;
+  overflow-x: hidden;
+
+  // Background Pattern Utility
+  .bg-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  // Hero Section
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  // Interaktive Elemente (Buttons & Cards)
+  button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Feature & Testimonial Cards
+  .group {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      border-color: rgba(v.$primary-color, 0.2);
+
+      .group-hover\:scale-110 {
+        animation: float 2s ease-in-out infinite;
+      }
+    }
+  }
+
+  // Pricing Card Speziallogik
+  .pricing-card {
+    @extend .group; // Vererbt Basis-Styles der Gruppe
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 60px -15px rgba(v.$primary-color, 0.3);
+    }
+  }
+
+  // Testimonial Specifics
+  .testimonial-card {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, v.$primary-color, v.$accent-color);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    &:hover::before {
+      transform: scaleX(1);
+    }
+  }
+
+  // Responsive Anpassungen via Mixin
+  @include m.mobile {
+    h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }
+}
+
+// --- Hilfsklassen ---
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.shadow-3xl {
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+}
